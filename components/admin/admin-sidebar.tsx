@@ -10,12 +10,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Menu, LogOut } from "lucide-react";
 import { useState } from "react";
-import { logout } from "@/lib/auth"; // Asegúrate de tener esta función o usar server action
 import { logoutAction } from "@/lib/actions/auth-actions";
+import Image from "next/image";
 
 interface SidebarProps {
     items: NavItem[];
-    user: { name: string; role: string };
+    user: { name: string; role: string; image?: string | null; };
 }
 
 export function AdminSidebar({ items, user }: SidebarProps) {
@@ -52,8 +52,18 @@ export function AdminSidebar({ items, user }: SidebarProps) {
     const UserFooter = () => (
         <div className="mt-auto border-t p-4 bg-slate-50/50">
             <div className="flex items-center gap-3 mb-4">
-                <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold border border-primary/20">
-                    {user.name.charAt(0)}
+                <div className="relative h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold border border-primary/20 overflow-hidden shrink-0">
+                    {user.image ? (
+                        <Image 
+                            src={user.image} 
+                            alt={user.name} 
+                            fill 
+                            className="object-cover" 
+                            sizes="36px"
+                        />
+                    ) : (
+                        <span>{user.name.charAt(0)}</span>
+                    )}
                 </div>
                 <div className="overflow-hidden">
                     <p className="text-sm font-bold truncate text-slate-800">{user.name}</p>
