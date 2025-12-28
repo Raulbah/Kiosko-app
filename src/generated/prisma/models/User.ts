@@ -29,6 +29,7 @@ export type UserMinAggregateOutputType = {
   employeeId: string | null
   password: string | null
   name: string | null
+  image: string | null
   roleId: string | null
   branchId: string | null
   isActive: boolean | null
@@ -40,6 +41,7 @@ export type UserMaxAggregateOutputType = {
   employeeId: string | null
   password: string | null
   name: string | null
+  image: string | null
   roleId: string | null
   branchId: string | null
   isActive: boolean | null
@@ -51,6 +53,7 @@ export type UserCountAggregateOutputType = {
   employeeId: number
   password: number
   name: number
+  image: number
   roleId: number
   branchId: number
   isActive: number
@@ -64,6 +67,7 @@ export type UserMinAggregateInputType = {
   employeeId?: true
   password?: true
   name?: true
+  image?: true
   roleId?: true
   branchId?: true
   isActive?: true
@@ -75,6 +79,7 @@ export type UserMaxAggregateInputType = {
   employeeId?: true
   password?: true
   name?: true
+  image?: true
   roleId?: true
   branchId?: true
   isActive?: true
@@ -86,6 +91,7 @@ export type UserCountAggregateInputType = {
   employeeId?: true
   password?: true
   name?: true
+  image?: true
   roleId?: true
   branchId?: true
   isActive?: true
@@ -170,6 +176,7 @@ export type UserGroupByOutputType = {
   employeeId: string
   password: string
   name: string
+  image: string | null
   roleId: string
   branchId: string
   isActive: boolean
@@ -202,6 +209,7 @@ export type UserWhereInput = {
   employeeId?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
+  image?: Prisma.StringNullableFilter<"User"> | string | null
   roleId?: Prisma.StringFilter<"User"> | string
   branchId?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
@@ -216,6 +224,7 @@ export type UserOrderByWithRelationInput = {
   employeeId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   roleId?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -233,6 +242,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
+  image?: Prisma.StringNullableFilter<"User"> | string | null
   roleId?: Prisma.StringFilter<"User"> | string
   branchId?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
@@ -247,6 +257,7 @@ export type UserOrderByWithAggregationInput = {
   employeeId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   roleId?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -264,6 +275,7 @@ export type UserScalarWhereWithAggregatesInput = {
   employeeId?: Prisma.StringWithAggregatesFilter<"User"> | string
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
+  image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   roleId?: Prisma.StringWithAggregatesFilter<"User"> | string
   branchId?: Prisma.StringWithAggregatesFilter<"User"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
@@ -275,6 +287,7 @@ export type UserCreateInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   isActive?: boolean
   createdAt?: Date | string
   role: Prisma.RoleCreateNestedOneWithoutUsersInput
@@ -287,6 +300,7 @@ export type UserUncheckedCreateInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   roleId: string
   branchId: string
   isActive?: boolean
@@ -299,6 +313,7 @@ export type UserUpdateInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
@@ -311,6 +326,7 @@ export type UserUncheckedUpdateInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -323,6 +339,7 @@ export type UserCreateManyInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   roleId: string
   branchId: string
   isActive?: boolean
@@ -334,6 +351,7 @@ export type UserUpdateManyMutationInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -343,6 +361,7 @@ export type UserUncheckedUpdateManyInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -364,6 +383,7 @@ export type UserCountOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -375,6 +395,7 @@ export type UserMaxOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -386,6 +407,7 @@ export type UserMinOrderByAggregateInput = {
   employeeId?: Prisma.SortOrder
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   branchId?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -502,6 +524,7 @@ export type UserCreateWithoutBranchInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   isActive?: boolean
   createdAt?: Date | string
   role: Prisma.RoleCreateNestedOneWithoutUsersInput
@@ -513,6 +536,7 @@ export type UserUncheckedCreateWithoutBranchInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   roleId: string
   isActive?: boolean
   createdAt?: Date | string
@@ -553,6 +577,7 @@ export type UserScalarWhereInput = {
   employeeId?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
+  image?: Prisma.StringNullableFilter<"User"> | string | null
   roleId?: Prisma.StringFilter<"User"> | string
   branchId?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
@@ -564,6 +589,7 @@ export type UserCreateWithoutRoleInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   isActive?: boolean
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutUsersInput
@@ -575,6 +601,7 @@ export type UserUncheckedCreateWithoutRoleInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   branchId: string
   isActive?: boolean
   createdAt?: Date | string
@@ -612,6 +639,7 @@ export type UserCreateWithoutOrdersInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   isActive?: boolean
   createdAt?: Date | string
   role: Prisma.RoleCreateNestedOneWithoutUsersInput
@@ -623,6 +651,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   roleId: string
   branchId: string
   isActive?: boolean
@@ -650,6 +679,7 @@ export type UserUpdateWithoutOrdersInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
@@ -661,6 +691,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -672,6 +703,7 @@ export type UserCreateManyBranchInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   roleId: string
   isActive?: boolean
   createdAt?: Date | string
@@ -682,6 +714,7 @@ export type UserUpdateWithoutBranchInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
@@ -693,6 +726,7 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -704,6 +738,7 @@ export type UserUncheckedUpdateManyWithoutBranchInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   roleId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -714,6 +749,7 @@ export type UserCreateManyRoleInput = {
   employeeId: string
   password: string
   name: string
+  image?: string | null
   branchId: string
   isActive?: boolean
   createdAt?: Date | string
@@ -724,6 +760,7 @@ export type UserUpdateWithoutRoleInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutUsersNestedInput
@@ -735,6 +772,7 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -746,6 +784,7 @@ export type UserUncheckedUpdateManyWithoutRoleInput = {
   employeeId?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -787,6 +826,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   employeeId?: boolean
   password?: boolean
   name?: boolean
+  image?: boolean
   roleId?: boolean
   branchId?: boolean
   isActive?: boolean
@@ -802,6 +842,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   employeeId?: boolean
   password?: boolean
   name?: boolean
+  image?: boolean
   roleId?: boolean
   branchId?: boolean
   isActive?: boolean
@@ -815,6 +856,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   employeeId?: boolean
   password?: boolean
   name?: boolean
+  image?: boolean
   roleId?: boolean
   branchId?: boolean
   isActive?: boolean
@@ -828,13 +870,14 @@ export type UserSelectScalar = {
   employeeId?: boolean
   password?: boolean
   name?: boolean
+  image?: boolean
   roleId?: boolean
   branchId?: boolean
   isActive?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "password" | "name" | "roleId" | "branchId" | "isActive" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "employeeId" | "password" | "name" | "image" | "roleId" | "branchId" | "isActive" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
@@ -862,6 +905,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     employeeId: string
     password: string
     name: string
+    image: string | null
     roleId: string
     branchId: string
     isActive: boolean
@@ -1296,6 +1340,7 @@ export interface UserFieldRefs {
   readonly employeeId: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
+  readonly image: Prisma.FieldRef<"User", 'String'>
   readonly roleId: Prisma.FieldRef<"User", 'String'>
   readonly branchId: Prisma.FieldRef<"User", 'String'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>

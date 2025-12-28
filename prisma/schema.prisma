@@ -68,9 +68,11 @@ model User {
   employeeId   String   @unique // Login ID
   password     String
   name         String
+  image        String?
   roleId       String
   branchId     String
   isActive     Boolean  @default(true)
+  
   role         Role     @relation(fields: [roleId], references: [id])
   branch       Branch   @relation(fields: [branchId], references: [id])
   orders       Order[]

@@ -3,156 +3,68 @@ import prisma from "@/lib/db";
 async function main() {
     console.log('🌱 Iniciando Seed...');
 
-    // 1. Limpiar DB (Orden importa por claves foráneas)
-    await prisma.product.deleteMany();
-    await prisma.category.deleteMany();
-    await prisma.branch.deleteMany();
+    
+    console.log('🔐 Iniciando Seed de Seguridad...');
 
-    // 2. Crear Sucursales
-    const centro = await prisma.branch.create({
-        data: { name: 'Sucursal Centro', slug: 'centro', address: 'Av. Reforma 123' },
+    // 1. Limpiar tablas de Auth (Orden: Usuario -> Rol -> Permiso -> Módulo)
+    // CUIDADO: Esto borrará usuarios existentes. Úsalo solo en dev.
+    await prisma.user.deleteMany();
+    await prisma.permission.deleteMany();
+    await prisma.role.deleteMany();
+    await prisma.module.deleteMany();
+    // Asegúrate de tener una sucursal creada (usaremos la 'centro' del seed anterior o creamos una)
+    const branch = await prisma.branch.findFirst() || await prisma.branch.create({
+        data: { name: 'Sucursal Matriz', slug: 'matriz', address: 'Oficina Central' }
     });
 
-    const norte = await prisma.branch.create({
-        data: { name: 'Sucursal Norte', slug: 'norte', address: 'Plaza Norte Local 4' },
+    // 2. Definir Módulos del Sistema (Hardcoded slugs)
+    const modulesData = [
+        { name: 'Dashboard', slug: 'dashboard' },
+        { name: 'Usuarios', slug: 'users' },
+        { name: 'Roles y Permisos', slug: 'roles' },
+        { name: 'Productos', slug: 'products' },
+        { name: 'Categorías', slug: 'categories' },
+        { name: 'Sucursales', slug: 'branches' },
+        { name: 'Ordenes', slug: 'orders' },
+        { name: 'Cocina', slug: 'kitchen' },
+    ];
+
+    await prisma.module.createMany({ data: modulesData });
+    const allModules = await prisma.module.findMany();
+
+    // 3. Crear Rol "Super Admin"
+    const adminRole = await prisma.role.create({
+        data: { name: 'Super Admin' }
     });
 
-    console.log(`✅ Sucursales creadas: ${centro.name}, ${norte.name}`);
+    // 4. Asignar TODOS los permisos al Super Admin
+    const permissionsData = allModules.map(module => ({
+        roleId: adminRole.id,
+        moduleId: module.id,
+        canCreate: true,
+        canRead: true,
+        canUpdate: true,
+        canDelete: true,
+    }));
 
-    // 3. Crear Categorías
-    const bebidas = await prisma.category.create({ data: { name: 'Bebidas', slug: 'bebidas' } });
-    const comida = await prisma.category.create({ data: { name: 'Comida', slug: 'comida' } });
-    const postres = await prisma.category.create({ data: { name: 'Postres', slug: 'postres' } });
+    await prisma.permission.createMany({ data: permissionsData });
 
-    // 4. Crear Productos
-
-    // --- GLOBALES (Disponibles en ambas) ---
-    await prisma.product.createMany({
-        data: [
-        {
-            name: 'Coca Cola 600ml',
-            description: 'Refresco sabor cola bien frío',
-            price: 25.00,
-            categoryId: bebidas.id,
-            branchId: null, // GLOBAL
-        },
-        {
-            name: 'Agua Mineral',
-            description: 'Botella 500ml',
-            price: 20.00,
-            categoryId: bebidas.id,
-            branchId: null, // GLOBAL
-        },
-        ],
-    });
-
-    // --- EXCLUSIVOS CENTRO (Ej. Comida más gourmet) ---
-    await prisma.product.create({
+    // 5. Crear Usuario Admin
+    // Password temporal = "123456" (Hasheado)
+    const hashedPassword = await import("bcryptjs").then(bcrypt => bcrypt.hash("123456", 10));
+    
+    await prisma.user.create({
         data: {
-            name: 'Tacos de Pastor (Orden)',
-            description: '5 tacos con piña, cilantro y cebolla',
-            price: 85.00,
-            categoryId: comida.id,
-            branchId: centro.id, // Solo Centro
-        },
+            name: 'Administrador Sistema',
+            employeeId: 'admin', // Usuario para Login
+            password: hashedPassword,
+            roleId: adminRole.id,
+            branchId: branch.id,
+            isActive: true,
+        }
     });
 
-    await prisma.product.create({
-        data: {
-            name: 'Cheesecake de Fresa',
-            description: 'Rebanada estilo NY',
-            price: 65.00,
-            categoryId: postres.id,
-            branchId: centro.id, // Solo Centro
-        },
-    });
-
-    // --- EXCLUSIVOS NORTE (Ej. Comida rápida / Snacks) ---
-    await prisma.product.create({
-        data: {
-            name: 'Burrito Norteño',
-            description: 'Machaca con huevo y frijoles',
-            price: 55.00,
-            categoryId: comida.id,
-            branchId: norte.id, // Solo Norte
-        },
-    });
-
-    await prisma.product.create({
-        data: {
-            name: 'Nachos con Queso',
-            description: 'Con jalapeños extra',
-            price: 45.00,
-            categoryId: comida.id,
-            branchId: norte.id, // Solo Norte
-        },
-    });
-
-    console.log('✅ Productos insertados');
-
-    // 1. Crear Producto Complejo
-    const fresas = await prisma.product.create({
-        data: {
-            name: 'Fresas con Crema',
-            description: 'Vaso con nuestra crema especial.',
-            price: 50.00, // Precio "Desde" (el del tamaño chico)
-            categoryId: postres.id,
-            branchId: centro.id,
-            imageUrl: 'https://images.unsplash.com/photo-1579703496669-07f9175a1334?q=80&w=1000',
-        },
-    });
-
-    // --- NUEVO: Crear Tamaños ---
-    await prisma.productSize.createMany({
-        data: [
-            { name: 'Chico (300ml)', price: 50.00, productId: fresas.id },
-            { name: 'Mediano (500ml)', price: 75.00, productId: fresas.id },
-            { name: 'Grande (1L)', price: 110.00, productId: fresas.id },
-        ]
-    });
-
-    // 2. Grupo: Toppings Base (Gratis, Max 2)
-    const grupoBase = await prisma.modifierGroup.create({
-        data: {
-            name: 'Elige tus Toppings',
-            minSelect: 0, 
-            includedSelect: 2, // <--- Los primeros 2 son gratis
-            maxSelect: 4,      // <--- Puedes elegir hasta 4 en total
-            extraPrice: 5.00,  // <--- El 3ro y 4to costarán $5 cada uno
-            productId: fresas.id,
-        },
-    });
-
-    await prisma.modifierOption.createMany({
-        data: [
-            { name: 'Granola', price: 0, groupId: grupoBase.id },
-            { name: 'Coco Rallado', price: 0, groupId: grupoBase.id },
-            { name: 'Amaranto', price: 0, groupId: grupoBase.id },
-            { name: 'Pasitas', price: 0, groupId: grupoBase.id },
-            { name: 'Nuez', price: 0, groupId: grupoBase.id }, // La nuez aquí es "base"
-        ],
-    });
-
-
-    // 3. Grupo: Extras (Con costo)
-    const grupoExtras = await prisma.modifierGroup.create({
-        data: {
-        name: '¿Algo extra? (Costo adicional)',
-        minSelect: 0,
-        maxSelect: 5, // Límite alto
-        productId: fresas.id,
-        },
-    });
-
-    await prisma.modifierOption.createMany({
-        data: [
-        { name: 'Choco Krispis', price: 5, groupId: grupoExtras.id },
-        { name: 'Nuez', price: 10, groupId: grupoExtras.id },
-        { name: 'Porción Extra de Mango', price: 15, groupId: grupoExtras.id },
-        ],
-    });
-
-    console.log('🍓 Fresas con toppings creadas');
+    console.log('✅ Usuario Admin creado: user="admin" pass="123456"');
 }
 main()
     .catch((e) => {

@@ -1,33 +1,35 @@
-// lib/auth.ts
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { SessionPayload } from "./types/auth-types";
 
-const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET);
+const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || "secreto-super-seguro-cambialo-en-env");
+
+export interface SessionPayload {
+    userId: string;
+    name: string;
+    role: string;      // Nombre del rol (ej. "Super Admin")
+    branchId: string;
+    exp?: number;
+}
 
 export async function createSession(payload: Omit<SessionPayload, "exp">) {
-    const token = await new SignJWT(payload as any) // Casteo controlado solo al firmar
+    const token = await new SignJWT(payload as any)
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("8h")
+        .setExpirationTime("8h") // La sesión dura 8 horas (turno laboral)
         .sign(SECRET_KEY);
 
     const cookieStore = await cookies();
     
-    cookieStore.set("session", token, {
+    cookieStore.set("session_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
+        // maxAge: 60 * 60 * 8 // 8 horas
     });
 }
 
-export async function verifySession(): Promise<SessionPayload | null> {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("session")?.value;
-
-    if (!token) return null;
-
+export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
     try {
         const { payload } = await jwtVerify(token, SECRET_KEY);
         return payload as unknown as SessionPayload;
@@ -36,19 +38,14 @@ export async function verifySession(): Promise<SessionPayload | null> {
     }
 }
 
-// Helper para verificar permisos en Server Actions (Backend Gatekeeper)
-export async function checkPermission(
-    moduleSlug: string, 
-    action: "create" | "read" | "update" | "delete"
-) {
-    const session = await verifySession();
-    if (!session) throw new Error("Unauthorized");
+export async function getSession() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session_token")?.value;
+    if (!token) return null;
+    return await verifySessionToken(token);
+}
 
-    const modulePerm = session.permissions.find(p => p.module === moduleSlug);
-    
-    if (!modulePerm || !modulePerm.actions[action]) {
-        throw new Error(`Forbidden: Missing ${action} permission for ${moduleSlug}`);
-    }
-    
-    return session; // Retorna la sesión si es válido
+export async function logout() {
+    const cookieStore = await cookies();
+    cookieStore.delete("session_token");
 }
