@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  PENDING      // Pendiente (Recién llegada)
+  IN_PROGRESS  // Preparando (En cocina)
+  READY        // Lista (Para recoger)
+  COMPLETED    // Entregada (Histórico)
+  CANCELLED    // Cancelada
+}
+
+// --- CORE SYSTEM & RBAC ---
+
+model Branch {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String    @unique
+  address   String?
+  isActive  Boolean  @default(true)
+  users     User[]
+  products  Product[]
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   // Ej: "Admin", "Cajero", "ClienteKiosko"
+  permissions Permission[]
+  users       User[]
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  name        String   // Ej: "inventory", "users", "pos"
+  slug        String   @unique
+  permissions Permission[]
+}
+
+model Permission {
+  id        String  @id @default(uuid())
+  roleId    String
+  moduleId  String
+  canCreate Boolean @default(false)
+  canRead   Boolean @default(false)
+  canUpdate Boolean @default(false)
+  canDelete Boolean @default(false)
+  role      Role    @relation(fields: [roleId], references: [id])
+  module    Module  @relation(fields: [moduleId], references: [id])
+
+  @@unique([roleId, moduleId]) // Un rol solo tiene una config de permisos por módulo
+}
+
+model User {
+  id           String   @id @default(uuid())
+  employeeId   String   @unique // Login ID
+  password     String
+  name         String
+  roleId       String
+  branchId     String
+  isActive     Boolean  @default(true)
+  role         Role     @relation(fields: [roleId], references: [id])
+  branch       Branch   @relation(fields: [branchId], references: [id])
+  orders       Order[]
+  createdAt    DateTime @default(now())
+}
+
+// --- NEGOCIO (Ejemplo Modular) ---
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  products  Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  imageUrl    String?
+  categoryId  String
+  branchId    String?   // Filtrado por sucursal
+  stock       Int      @default(0)
+  isActive    Boolean  @default(true)
+  // Relaciones
+  modifierGroups ModifierGroup[]
+  sizes          ProductSize[]
+  category    Category @relation(fields: [categoryId], references: [id])
+  branch      Branch?   @relation(fields: [branchId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime @default(now())
+}
+
+model ProductSize {
+  id        String   @id @default(uuid())
+  name      String   // Ej: "Chico", "Mediano", "Grande"
+  price     Decimal  @db.Decimal(10, 2)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ModifierGroup {
+  id        String           @id @default(uuid())
+  name      String           // Ej: "Toppings Incluidos", "Extras"
+  minSelect Int              @default(0) // 0 = Opcional, 1+ = Obligatorio
+  maxSelect Int              @default(1) // Límite de selección
+  includedSelect Int              @default(0)     // Cuántos son gratis
+  extraPrice     Decimal          @default(0.00) @db.Decimal(10, 2) // Precio si se excede el incluido
+  productId String
+  product   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  options   ModifierOption[]
+}
+
+model ModifierOption {
+  id        String        @id @default(uuid())
+  name      String        // Ej: "Granola", "Chocolate"
+  price     Decimal       @default(0.00) @db.Decimal(10, 2) // Si es 0 es gratis
+  groupId   String
+  
+  group     ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  customerName String
+  total     Decimal
+  status    OrderStatus @default(PENDING)      // PENDING, COMPLETED, CANCELLED
+  userId    String?     // Puede ser nulo si es kiosko anónimo, o el cajero que lo creó
+  branchId  String
+  user      User?       @relation(fields: [userId], references: [id])
+  branch    Branch      @relation(fields: [branchId], references: [id])
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2) // Precio unitario final (Base + Extras)
+  
+  // NUEVO CAMPO: Aquí guardaremos el snapshot de los modificadores y tamaño
+  // Estructura esperada: { size: "Grande", modifiers: [{name: "Granola", price: 0}] }
+  options   Json?   
+
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
