@@ -127,7 +127,7 @@ export function UserForm({ user, roles, branches, onSuccess }: UserFormProps) {
                             <FormItem>
                                 <FormLabel>Rol</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
+                                    <FormControl className="cursor-pointer"><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
                                     <SelectContent>
                                         {roles.map(r => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}
                                     </SelectContent>
@@ -143,7 +143,7 @@ export function UserForm({ user, roles, branches, onSuccess }: UserFormProps) {
                             <FormItem>
                                 <FormLabel>Sucursal</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
+                                    <FormControl className="cursor-pointer"><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
                                     <SelectContent>
                                         {branches.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
                                     </SelectContent>
@@ -155,7 +155,7 @@ export function UserForm({ user, roles, branches, onSuccess }: UserFormProps) {
                 </div>
                 <FormItem>
                     <FormLabel>Foto de Perfil</FormLabel>
-                    <FormControl>
+                    <FormControl className="cursor-pointer">
                         <Input type="file" accept="image/*" />
                     </FormControl>
                     <p className="text-[0.8rem] text-muted-foreground">JPG, PNG. Máx 2MB.</p>
@@ -166,10 +166,11 @@ export function UserForm({ user, roles, branches, onSuccess }: UserFormProps) {
                     render={({ field }) => (
                         <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                             <div className="space-y-0.5">
-                                <FormLabel>Usuario Activo</FormLabel>
+                                <FormLabel className="cursor-pointer">Usuario Activo</FormLabel>
                             </div>
                             <FormControl>
-                                <Switch 
+                                <Switch
+                                    className="cursor-pointer"
                                     checked={field.value} 
                                     onCheckedChange={field.onChange} 
                                 />

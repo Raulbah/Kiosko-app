@@ -48,7 +48,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 </div>
             </main>
 
-            <Toaster richColors position="top-right" />
+            <Toaster position="top-right" />
         </div>
     );
 }

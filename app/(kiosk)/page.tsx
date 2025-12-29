@@ -43,7 +43,7 @@ async function getBranches() {
 
 async function getCategories() {
     return await prisma.category.findMany({
-        select: { id: true, name: true, slug: true },
+        select: { id: true, name: true, slug: true, image: true },
         orderBy: { name: 'asc' } // O podrías agregar un campo 'order' en la BD
     });
 }
