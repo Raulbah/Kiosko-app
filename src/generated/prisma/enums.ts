@@ -20,6 +20,17 @@ export const OrderStatus = {
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 
+export const UnitType = {
+  UNIT: 'UNIT',
+  KG: 'KG',
+  L: 'L',
+  G: 'G',
+  ML: 'ML'
+} as const
+
+export type UnitType = (typeof UnitType)[keyof typeof UnitType]
+
+
 export const MovementType = {
   IN_PURCHASE: 'IN_PURCHASE',
   OUT_SALE: 'OUT_SALE',

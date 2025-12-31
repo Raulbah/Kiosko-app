@@ -2,83 +2,79 @@ import prisma from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { InventoryTable } from "@/components/admin/inventory/inventory-table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, PackageCheck, PackageX } from "lucide-react";
+import { SuppliesTable } from "@/components/admin/inventory/supplies-table"; // Nuevo Componente
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function InventoryPage() {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    // 1. Obtener Inventario
+    // 1. Productos Simples (Stock directo)
     const products = await prisma.product.findMany({
-        where: { isActive: true },
+        where: { isActive: true, isCompound: false }, // Solo lo que se cuenta físicamente
         include: {
             category: true,
-            // CORRECCIÓN: Usar el nombre real de la relación en el schema
-            inventoryStocks: {
-                where: { branchId: session.branchId }
-            }
-        },
-        orderBy: { name: 'asc' }
+            inventoryStocks: { where: { branchId: session.branchId } }
+        }
     });
 
-    // 2. Procesar datos
-    const inventoryData = products.map(p => {
-        // CORRECCIÓN: Acceder a p.inventoryStocks[0]
-        const stockData = p.inventoryStocks[0]; 
-        
-        const qty = stockData?.quantity || 0;
-        const min = stockData?.minStock || 5;
+    const inventoryData = products.map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category.name,
+        quantity: Number(p.inventoryStocks[0]?.quantity || 0),
+        minStock: Number(p.inventoryStocks[0]?.minStock || 5),
+        unit: "PZA", // Productos simples suelen ser piezas
+        status: "OK" // Puedes agregar tu lógica de status aquí
+    }));
 
-        return {
-            id: p.id,
-            name: p.name,
-            category: p.category.name, // Ahora sí existe porque el include anterior es correcto
-            quantity: qty,
-            minStock: min,
-            status: qty === 0 ? "OUT" : qty <= min ? "LOW" : "OK",
-            stockId: stockData?.id
-        };
+    // 2. Insumos (Materia Prima)
+    const supplies = await prisma.supply.findMany({
+        include: {
+            stocks: { where: { branchId: session.branchId } }
+        }
     });
 
-    // 3. Métricas
-    const lowStockCount = inventoryData.filter(i => i.status === "LOW").length;
-    const outOfStockCount = inventoryData.filter(i => i.status === "OUT").length;
+    const suppliesData = supplies.map(s => ({
+        id: s.id,
+        name: s.name,
+        unit: s.unit,
+        quantity: Number(s.stocks[0]?.quantity || 0),
+        minStock: Number(s.stocks[0]?.minStock || 0),
+    }));
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold">Inventario de Sucursal</h1>
-
-            <div className="grid gap-4 md:grid-cols-3">
-                <Card className="bg-red-50 border-red-200">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-red-800">Agotados</CardTitle>
-                        <PackageX className="h-4 w-4 text-red-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-red-700">{outOfStockCount}</div>
-                    </CardContent>
-                </Card>
-                <Card className="bg-orange-50 border-orange-200">
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium text-orange-800">Stock Bajo</CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-orange-600" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-orange-700">{lowStockCount}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                        <CardTitle className="text-sm font-medium">Total Items</CardTitle>
-                        <PackageCheck className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{inventoryData.length}</div>
-                    </CardContent>
-                </Card>
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold">Gestión de Inventario</h1>
             </div>
-            <InventoryTable data={inventoryData} />
+
+            <Tabs defaultValue="supplies" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 max-w-100">
+                    <TabsTrigger value="supplies">Materia Prima (Insumos)</TabsTrigger>
+                    <TabsTrigger value="products">Productos de Reventa</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="supplies" className="mt-4">
+                    <div className="bg-white p-4 rounded-lg border shadow-sm">
+                        <div className="mb-4">
+                            <h2 className="text-lg font-semibold">Almacén de Insumos</h2>
+                            <p className="text-sm text-muted-foreground">Ingredientes para preparación (Fresas, Crema, Vasos...)</p>
+                        </div>
+                        <SuppliesTable data={suppliesData} />
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="products" className="mt-4">
+                    <div className="bg-white p-4 rounded-lg border shadow-sm">
+                        <div className="mb-4">
+                            <h2 className="text-lg font-semibold">Almacén de Reventa</h2>
+                            <p className="text-sm text-muted-foreground">Productos listos para vender (Refrescos, Papas...)</p>
+                        </div>
+                        <InventoryTable data={inventoryData} />
+                    </div>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

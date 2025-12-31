@@ -46,37 +46,36 @@ export async function adjustStockAction(productId: string, realQuantity: number,
 
     try {
         await prisma.$transaction(async (tx) => {
-        // 1. Obtener stock actual
-        const currentStock = await tx.inventoryStock.findUnique({
-            where: { productId_branchId: { productId, branchId: session.branchId } }
-        });
+            // 1. Obtener stock actual
+            const currentStock = await tx.inventoryStock.findUnique({
+                where: { productId_branchId: { productId, branchId: session.branchId } }
+            });
+            const currentQty = currentStock ? Number(currentStock.quantity) : 0;
+            const difference = realQuantity - currentQty;
 
-        const currentQty = currentStock?.quantity || 0;
-        const difference = realQuantity - currentQty;
+            if (difference === 0) return; // No hubo cambio
 
-        if (difference === 0) return; // No hubo cambio
+            // 2. Determinar tipo de movimiento
+            const type: MovementType = difference > 0 ? "ADJUSTMENT" : "OUT_LOSS";
 
-        // 2. Determinar tipo de movimiento
-        const type: MovementType = difference > 0 ? "ADJUSTMENT" : "OUT_LOSS";
+            // 3. Actualizar
+            await tx.inventoryStock.upsert({
+                where: { productId_branchId: { productId, branchId: session.branchId } },
+                update: { quantity: realQuantity }, // Seteamos el valor real
+                create: { productId, branchId: session.branchId, quantity: realQuantity }
+            });
 
-        // 3. Actualizar
-        await tx.inventoryStock.upsert({
-            where: { productId_branchId: { productId, branchId: session.branchId } },
-            update: { quantity: realQuantity }, // Seteamos el valor real
-            create: { productId, branchId: session.branchId, quantity: realQuantity }
-        });
-
-        // 4. Kardex
-        await tx.inventoryMovement.create({
-            data: {
-            type,
-            quantity: Math.abs(difference), // Guardamos magnitud
-            reason: `Ajuste: Sistema(${currentQty}) vs Físico(${realQuantity}) - ${reason}`,
-            productId,
-            branchId: session.branchId,
-            userId: session.userId
-            }
-        });
+            // 4. Kardex
+            await tx.inventoryMovement.create({
+                data: {
+                    type,
+                    quantity: Math.abs(difference), // Guardamos magnitud
+                    reason: `Ajuste: Sistema(${currentQty}) vs Físico(${realQuantity}) - ${reason}`,
+                    productId,
+                    branchId: session.branchId,
+                    userId: session.userId
+                }
+            });
         });
 
         revalidatePath("/admin/inventory");

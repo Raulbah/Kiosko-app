@@ -25,36 +25,55 @@ export async function placeOrderAction(items: any[], total: number, customerName
     try {
         // INICIO DE TRANSACCIÓN (tx)
         const order = await prisma.$transaction(async (tx) => {
-            
             // 1. VALIDAR Y DESCONTAR INVENTARIO
             for (const item of items) {
-                // Buscamos el registro de inventario para este producto en esta sucursal
-                const stockEntry = await tx.inventoryStock.findUnique({
-                    where: { 
-                        productId_branchId: { 
-                            productId: item.productId, 
-                            branchId: branchId 
-                        } 
-                    }
+                const product = await tx.product.findUnique({
+                    where: { id: item.productId },
+                    include: { recipeItems: true } // Traemos la receta
                 });
 
-                // Si no existe registro o la cantidad es menor a la solicitada
-                if (!stockEntry || stockEntry.quantity < item.quantity) {
-                    throw new Error(`Stock insuficiente para: ${item.name}. Disponible: ${stockEntry?.quantity || 0}`);
+                if (!product) throw new Error("Producto no encontrado");
+
+                // LÓGICA DE DESCUENTO
+                if (product.isCompound) {
+                    // --- CASO A: PRODUCTO COMPUESTO (Descontar Insumos) ---
+                    if (product.recipeItems.length === 0) {
+                        // Opcional: Permitir venta sin receta, o lanzar warning
+                        console.warn(`Producto compuesto ${product.name} no tiene receta configurada.`);
+                    }
+                    for (const ingredient of product.recipeItems) {
+                        // Cantidad a descontar = (Cantidad en receta * Cantidad vendida)
+                        const totalNeeded = Number(ingredient.quantity) * item.quantity;
+
+                        // Buscar stock del insumo
+                        const supplyStock = await tx.supplyStock.findUnique({
+                            where: { supplyId_branchId: { supplyId: ingredient.supplyId, branchId } }
+                        });
+                        if (!supplyStock || Number(supplyStock.quantity) < totalNeeded) {
+                            throw new Error(`Insumo insuficiente: ${totalNeeded} de ingrediente ID ${ingredient.supplyId}`);
+                        }
+                        // Descontar Insumo
+                        await tx.supplyStock.update({
+                            where: { supplyId_branchId: { supplyId: ingredient.supplyId, branchId } },
+                            data: { quantity: { decrement: totalNeeded } }
+                        });
+                    }
+
+                } else {
+                    // --- CASO B: PRODUCTO SIMPLE (Descontar Directo) ---
+                    const stockEntry = await tx.inventoryStock.findUnique({
+                        where: { productId_branchId: { productId: item.productId, branchId } }
+                    });
+
+                    if (!stockEntry || Number(stockEntry.quantity) < item.quantity) {
+                        throw new Error(`Stock insuficiente para: ${item.name}`);
+                    }
+
+                    await tx.inventoryStock.update({
+                        where: { productId_branchId: { productId: item.productId, branchId } },
+                        data: { quantity: { decrement: item.quantity } }
+                    });
                 }
-
-                // Descontamos del inventario
-                await tx.inventoryStock.update({
-                    where: { 
-                        productId_branchId: { 
-                            productId: item.productId, 
-                            branchId: branchId 
-                        } 
-                    },
-                    data: { 
-                        quantity: { decrement: item.quantity } 
-                    }
-                });
             }
 
             // 2. CREAR LA ORDEN

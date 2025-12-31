@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Edit, Trash, Settings2 } from "lucide-react";
+import { MoreHorizontal, Edit, Trash, Settings2, ChefHat } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
 import Link from "next/link";
@@ -85,11 +85,18 @@ export const getColumns = ({ onEdit, onDelete, permissions }: ColumnsProps): Col
         <div className="flex items-center gap-2">
             {/* Botón directo a Modificadores */}
             {permissions.canUpdate && (
-                <Link href={`/admin/products/${row.original.id}/modifiers`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-primary cursor-pointer">
-                        <Settings2 className="h-4 w-4" />
-                    </Button>
-                </Link>
+                <>
+                    <Link href={`/admin/products/${row.original.id}/modifiers`}>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-blue-600 cursor-pointer">
+                            <Settings2 className="h-4 w-4" />
+                        </Button>
+                    </Link>
+                    <Link href={`/admin/products/${row.original.id}/recipe`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-blue-600 cursor-pointer" title="Configurar Receta">
+                                <ChefHat className="h-4 w-4" />
+                            </Button>
+                    </Link>
+                </>
             )}
 
             <DropdownMenu>

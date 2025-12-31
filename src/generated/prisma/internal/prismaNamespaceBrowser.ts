@@ -64,7 +64,10 @@ export const ModelName = {
   Order: 'Order',
   OrderItem: 'OrderItem',
   InventoryStock: 'InventoryStock',
-  InventoryMovement: 'InventoryMovement'
+  InventoryMovement: 'InventoryMovement',
+  Supply: 'Supply',
+  SupplyStock: 'SupplyStock',
+  RecipeItem: 'RecipeItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -159,6 +162,7 @@ export const ProductScalarFieldEnum = {
   categoryId: 'categoryId',
   branchId: 'branchId',
   isActive: 'isActive',
+  isCompound: 'isCompound',
   createdAt: 'createdAt'
 } as const
 
@@ -243,11 +247,43 @@ export const InventoryMovementScalarFieldEnum = {
   reason: 'reason',
   createdAt: 'createdAt',
   productId: 'productId',
+  supplyId: 'supplyId',
   branchId: 'branchId',
   userId: 'userId'
 } as const
 
 export type InventoryMovementScalarFieldEnum = (typeof InventoryMovementScalarFieldEnum)[keyof typeof InventoryMovementScalarFieldEnum]
+
+
+export const SupplyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  unit: 'unit',
+  cost: 'cost'
+} as const
+
+export type SupplyScalarFieldEnum = (typeof SupplyScalarFieldEnum)[keyof typeof SupplyScalarFieldEnum]
+
+
+export const SupplyStockScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  minStock: 'minStock',
+  supplyId: 'supplyId',
+  branchId: 'branchId'
+} as const
+
+export type SupplyStockScalarFieldEnum = (typeof SupplyStockScalarFieldEnum)[keyof typeof SupplyStockScalarFieldEnum]
+
+
+export const RecipeItemScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  productId: 'productId',
+  supplyId: 'supplyId'
+} as const
+
+export type RecipeItemScalarFieldEnum = (typeof RecipeItemScalarFieldEnum)[keyof typeof RecipeItemScalarFieldEnum]
 
 
 export const SortOrder = {

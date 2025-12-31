@@ -51,11 +51,6 @@ export default async function UsersAdminPage() {
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold tracking-tight">Gestión de Usuarios</h1>
                 {/* Feedback visual para el Super Admin */}
-                {isSuperAdmin && (
-                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded border border-yellow-200">
-                        Modo Super Admin: Viendo inactivos
-                    </span>
-                )}
             </div>
             
             <UsersTable 

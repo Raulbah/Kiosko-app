@@ -87,3 +87,18 @@ export type InventoryStock = Prisma.InventoryStockModel
  * 
  */
 export type InventoryMovement = Prisma.InventoryMovementModel
+/**
+ * Model Supply
+ * 
+ */
+export type Supply = Prisma.SupplyModel
+/**
+ * Model SupplyStock
+ * 
+ */
+export type SupplyStock = Prisma.SupplyStockModel
+/**
+ * Model RecipeItem
+ * 
+ */
+export type RecipeItem = Prisma.RecipeItemModel

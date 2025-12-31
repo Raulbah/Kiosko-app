@@ -27,19 +27,19 @@ export type AggregateInventoryStock = {
 }
 
 export type InventoryStockAvgAggregateOutputType = {
-  quantity: number | null
-  minStock: number | null
+  quantity: runtime.Decimal | null
+  minStock: runtime.Decimal | null
 }
 
 export type InventoryStockSumAggregateOutputType = {
-  quantity: number | null
-  minStock: number | null
+  quantity: runtime.Decimal | null
+  minStock: runtime.Decimal | null
 }
 
 export type InventoryStockMinAggregateOutputType = {
   id: string | null
-  quantity: number | null
-  minStock: number | null
+  quantity: runtime.Decimal | null
+  minStock: runtime.Decimal | null
   location: string | null
   productId: string | null
   branchId: string | null
@@ -47,8 +47,8 @@ export type InventoryStockMinAggregateOutputType = {
 
 export type InventoryStockMaxAggregateOutputType = {
   id: string | null
-  quantity: number | null
-  minStock: number | null
+  quantity: runtime.Decimal | null
+  minStock: runtime.Decimal | null
   location: string | null
   productId: string | null
   branchId: string | null
@@ -191,8 +191,8 @@ export type InventoryStockGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type InventoryStockGroupByOutputType = {
   id: string
-  quantity: number
-  minStock: number
+  quantity: runtime.Decimal
+  minStock: runtime.Decimal
   location: string | null
   productId: string
   branchId: string
@@ -223,8 +223,8 @@ export type InventoryStockWhereInput = {
   OR?: Prisma.InventoryStockWhereInput[]
   NOT?: Prisma.InventoryStockWhereInput | Prisma.InventoryStockWhereInput[]
   id?: Prisma.StringFilter<"InventoryStock"> | string
-  quantity?: Prisma.IntFilter<"InventoryStock"> | number
-  minStock?: Prisma.IntFilter<"InventoryStock"> | number
+  quantity?: Prisma.DecimalFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.StringNullableFilter<"InventoryStock"> | string | null
   productId?: Prisma.StringFilter<"InventoryStock"> | string
   branchId?: Prisma.StringFilter<"InventoryStock"> | string
@@ -249,8 +249,8 @@ export type InventoryStockWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.InventoryStockWhereInput | Prisma.InventoryStockWhereInput[]
   OR?: Prisma.InventoryStockWhereInput[]
   NOT?: Prisma.InventoryStockWhereInput | Prisma.InventoryStockWhereInput[]
-  quantity?: Prisma.IntFilter<"InventoryStock"> | number
-  minStock?: Prisma.IntFilter<"InventoryStock"> | number
+  quantity?: Prisma.DecimalFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.StringNullableFilter<"InventoryStock"> | string | null
   productId?: Prisma.StringFilter<"InventoryStock"> | string
   branchId?: Prisma.StringFilter<"InventoryStock"> | string
@@ -277,8 +277,8 @@ export type InventoryStockScalarWhereWithAggregatesInput = {
   OR?: Prisma.InventoryStockScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InventoryStockScalarWhereWithAggregatesInput | Prisma.InventoryStockScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"InventoryStock"> | string
-  quantity?: Prisma.IntWithAggregatesFilter<"InventoryStock"> | number
-  minStock?: Prisma.IntWithAggregatesFilter<"InventoryStock"> | number
+  quantity?: Prisma.DecimalWithAggregatesFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalWithAggregatesFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.StringNullableWithAggregatesFilter<"InventoryStock"> | string | null
   productId?: Prisma.StringWithAggregatesFilter<"InventoryStock"> | string
   branchId?: Prisma.StringWithAggregatesFilter<"InventoryStock"> | string
@@ -286,8 +286,8 @@ export type InventoryStockScalarWhereWithAggregatesInput = {
 
 export type InventoryStockCreateInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   product: Prisma.ProductCreateNestedOneWithoutInventoryStocksInput
   branch: Prisma.BranchCreateNestedOneWithoutInventoryStocksInput
@@ -295,8 +295,8 @@ export type InventoryStockCreateInput = {
 
 export type InventoryStockUncheckedCreateInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   productId: string
   branchId: string
@@ -304,8 +304,8 @@ export type InventoryStockUncheckedCreateInput = {
 
 export type InventoryStockUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   product?: Prisma.ProductUpdateOneRequiredWithoutInventoryStocksNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutInventoryStocksNestedInput
@@ -313,8 +313,8 @@ export type InventoryStockUpdateInput = {
 
 export type InventoryStockUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -322,8 +322,8 @@ export type InventoryStockUncheckedUpdateInput = {
 
 export type InventoryStockCreateManyInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   productId: string
   branchId: string
@@ -331,15 +331,15 @@ export type InventoryStockCreateManyInput = {
 
 export type InventoryStockUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type InventoryStockUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -483,16 +483,16 @@ export type InventoryStockUncheckedUpdateManyWithoutProductNestedInput = {
 
 export type InventoryStockCreateWithoutBranchInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   product: Prisma.ProductCreateNestedOneWithoutInventoryStocksInput
 }
 
 export type InventoryStockUncheckedCreateWithoutBranchInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   productId: string
 }
@@ -528,8 +528,8 @@ export type InventoryStockScalarWhereInput = {
   OR?: Prisma.InventoryStockScalarWhereInput[]
   NOT?: Prisma.InventoryStockScalarWhereInput | Prisma.InventoryStockScalarWhereInput[]
   id?: Prisma.StringFilter<"InventoryStock"> | string
-  quantity?: Prisma.IntFilter<"InventoryStock"> | number
-  minStock?: Prisma.IntFilter<"InventoryStock"> | number
+  quantity?: Prisma.DecimalFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFilter<"InventoryStock"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.StringNullableFilter<"InventoryStock"> | string | null
   productId?: Prisma.StringFilter<"InventoryStock"> | string
   branchId?: Prisma.StringFilter<"InventoryStock"> | string
@@ -537,16 +537,16 @@ export type InventoryStockScalarWhereInput = {
 
 export type InventoryStockCreateWithoutProductInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   branch: Prisma.BranchCreateNestedOneWithoutInventoryStocksInput
 }
 
 export type InventoryStockUncheckedCreateWithoutProductInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   branchId: string
 }
@@ -579,64 +579,64 @@ export type InventoryStockUpdateManyWithWhereWithoutProductInput = {
 
 export type InventoryStockCreateManyBranchInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   productId: string
 }
 
 export type InventoryStockUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   product?: Prisma.ProductUpdateOneRequiredWithoutInventoryStocksNestedInput
 }
 
 export type InventoryStockUncheckedUpdateWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type InventoryStockUncheckedUpdateManyWithoutBranchInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   productId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type InventoryStockCreateManyProductInput = {
   id?: string
-  quantity?: number
-  minStock?: number
+  quantity?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: string | null
   branchId: string
 }
 
 export type InventoryStockUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   branch?: Prisma.BranchUpdateOneRequiredWithoutInventoryStocksNestedInput
 }
 
 export type InventoryStockUncheckedUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type InventoryStockUncheckedUpdateManyWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  quantity?: Prisma.IntFieldUpdateOperationsInput | number
-  minStock?: Prisma.IntFieldUpdateOperationsInput | number
+  quantity?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  minStock?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -707,8 +707,8 @@ export type $InventoryStockPayload<ExtArgs extends runtime.Types.Extensions.Inte
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    quantity: number
-    minStock: number
+    quantity: runtime.Decimal
+    minStock: runtime.Decimal
     location: string | null
     productId: string
     branchId: string
@@ -1138,8 +1138,8 @@ export interface Prisma__InventoryStockClient<T, Null = never, ExtArgs extends r
  */
 export interface InventoryStockFieldRefs {
   readonly id: Prisma.FieldRef<"InventoryStock", 'String'>
-  readonly quantity: Prisma.FieldRef<"InventoryStock", 'Int'>
-  readonly minStock: Prisma.FieldRef<"InventoryStock", 'Int'>
+  readonly quantity: Prisma.FieldRef<"InventoryStock", 'Decimal'>
+  readonly minStock: Prisma.FieldRef<"InventoryStock", 'Decimal'>
   readonly location: Prisma.FieldRef<"InventoryStock", 'String'>
   readonly productId: Prisma.FieldRef<"InventoryStock", 'String'>
   readonly branchId: Prisma.FieldRef<"InventoryStock", 'String'>

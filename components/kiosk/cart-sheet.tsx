@@ -21,16 +21,16 @@ export function CartSheet() {
 
     const handleCheckout = async () => {
         if (!customerName.trim()) {
-            toast.warning("Por favor, ingresa tu nombre para la orden.");
+            toast.warning("Por favor, ingresa tu nombre.");
             return;
         }
         setIsProcessing(true);
 
         try {
+            // 1. Preparar items (Tu lógica actual...)
             const orderItems = items.map(item => {
                 const modifiersTotal = item.selectedModifiers.reduce((sum, m) => sum + m.price, 0);
                 const unitPrice = item.basePrice + modifiersTotal;
-                
                 return {
                     productId: item.productId,
                     quantity: item.quantity,
@@ -41,13 +41,32 @@ export function CartSheet() {
                 };
             });
 
+            // 2. Crear Orden
             const result = await placeOrderAction(orderItems, cartTotal, customerName);
 
             if (result.success) {
-                toast.success("¡Orden Enviada!", { description: result.message });
+                toast.success("¡Orden Enviada!");
+                
+                // 3. LIMPIEZA
                 clearCart();
                 setCustomerName("");
-                toggleCart();
+                toggleCart(); // Cerrar el sheet
+
+                // 4. ABRIR VENTANA DE IMPRESIÓN (NUEVO)
+                // Usamos setTimeout para asegurar que el toast se vea y no bloquee el hilo UI
+                setTimeout(() => {
+                    const width = 400;
+                    const height = 600;
+                    const left = (window.screen.width / 2) - (width / 2);
+                    const top = (window.screen.height / 2) - (height / 2);
+                    
+                    window.open(
+                        `/print/order/${result.orderId}`, 
+                        'Imprimir Ticket', 
+                        `width=${width},height=${height},top=${top},left=${left},scrollbars=yes`
+                    );
+                }, 500);
+
             } else {
                 toast.error("Error", { description: result.message });
             }

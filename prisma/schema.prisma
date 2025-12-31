@@ -12,49 +12,59 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-
 enum OrderStatus {
-  PENDING      // Pendiente (Recién llegada)
-  IN_PROGRESS  // Preparando (En cocina)
-  READY        // Lista (Para recoger)
-  COMPLETED    // Entregada (Histórico)
-  CANCELLED    // Cancelada
+  PENDING
+  IN_PROGRESS
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum UnitType {
+  UNIT
+  KG
+  L
+  G
+  ML
 }
 
 enum MovementType {
-  IN_PURCHASE    // Entrada por compra
-  OUT_SALE       // Salida por venta
-  OUT_LOSS       // Merma / Caducidad / Robo
-  ADJUSTMENT     // Ajuste de inventario físico
+  IN_PURCHASE
+  OUT_SALE
+  OUT_LOSS
+  ADJUSTMENT
 }
 
 // --- CORE SYSTEM & RBAC ---
 
 model Branch {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String    @unique
-  address   String?
-  isActive  Boolean  @default(true)
-  users     User[]
-  products  Product[]
-  orders    Order[]
+  id                 String              @id @default(uuid())
+  name               String
+  slug               String              @unique
+  address            String?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  
+  // Relaciones
+  users              User[]
+  products           Product[]
+  orders             Order[]
   inventoryStocks    InventoryStock[]
   inventoryMovements InventoryMovement[]
-  createdAt DateTime @default(now())
+  supplyStocks       SupplyStock[]       // <--- CORRECCIÓN 1: Faltaba esta relación inversa
 }
 
 model Role {
-  id          String   @id @default(uuid())
-  name        String   // Ej: "Admin", "Cajero", "ClienteKiosko"
+  id          String       @id @default(uuid())
+  name        String
   permissions Permission[]
   users       User[]
 }
 
 model Module {
-  id          String   @id @default(uuid())
-  name        String   // Ej: "inventory", "users", "pos"
-  slug        String   @unique
+  id          String       @id @default(uuid())
+  name        String
+  slug        String       @unique
   permissions Permission[]
 }
 
@@ -69,96 +79,101 @@ model Permission {
   role      Role    @relation(fields: [roleId], references: [id])
   module    Module  @relation(fields: [moduleId], references: [id])
 
-  @@unique([roleId, moduleId]) // Un rol solo tiene una config de permisos por módulo
+  @@unique([roleId, moduleId])
 }
 
 model User {
-  id           String   @id @default(uuid())
-  employeeId   String   @unique // Login ID
-  password     String
-  name         String
-  image        String?
-  roleId       String
-  branchId     String
-  isActive     Boolean  @default(true)
-  role         Role     @relation(fields: [roleId], references: [id])
-  branch       Branch   @relation(fields: [branchId], references: [id])
-  orders       Order[]
+  id                 String              @id @default(uuid())
+  employeeId         String              @unique
+  password           String
+  name               String
+  image              String?
+  roleId             String
+  branchId           String
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  
+  role               Role                @relation(fields: [roleId], references: [id])
+  branch             Branch              @relation(fields: [branchId], references: [id])
+  orders             Order[]
   inventoryMovements InventoryMovement[]
-  createdAt    DateTime @default(now())
 }
 
-// --- NEGOCIO (Ejemplo Modular) ---
+// --- NEGOCIO ---
 
 model Category {
-  id        String    @id @default(uuid())
-  name      String
-  slug      String    @unique
-  image     String?
-  products  Product[]
+  id       String    @id @default(uuid())
+  name     String
+  slug     String    @unique
+  image    String?
+  products Product[]
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  price       Decimal  @db.Decimal(10, 2)
-  imageUrl    String?
-  categoryId  String
-  branchId    String?   // Filtrado por sucursal
-  isActive    Boolean  @default(true)
+  id                 String              @id @default(uuid())
+  name               String
+  description        String?
+  price              Decimal             @db.Decimal(10, 2)
+  imageUrl           String?
+  categoryId         String
+  branchId           String?
+  isActive           Boolean             @default(true)
+  isCompound         Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  
   // Relaciones
-  modifierGroups ModifierGroup[]
-  sizes          ProductSize[]
-  category    Category @relation(fields: [categoryId], references: [id])
-  branch      Branch?   @relation(fields: [branchId], references: [id])
-  inventoryStocks InventoryStock[]
+  modifierGroups     ModifierGroup[]
+  sizes              ProductSize[]
+  inventoryStocks    InventoryStock[]
   inventoryMovements InventoryMovement[]
-  orderItems  OrderItem[]
-  createdAt   DateTime @default(now())
+  recipeItems        RecipeItem[]
+  orderItems         OrderItem[]
+  
+  category           Category            @relation(fields: [categoryId], references: [id])
+  branch             Branch?             @relation(fields: [branchId], references: [id])
 }
 
 model ProductSize {
-  id        String   @id @default(uuid())
-  name      String   // Ej: "Chico", "Mediano", "Grande"
-  price     Decimal  @db.Decimal(10, 2)
+  id        String  @id @default(uuid())
+  name      String
+  price     Decimal @db.Decimal(10, 2)
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ModifierGroup {
-  id        String           @id @default(uuid())
-  name      String           // Ej: "Toppings Incluidos", "Extras"
-  minSelect Int              @default(0) // 0 = Opcional, 1+ = Obligatorio
-  maxSelect Int              @default(1) // Límite de selección
-  includedSelect Int              @default(0)     // Cuántos son gratis
-  extraPrice     Decimal          @default(0.00) @db.Decimal(10, 2) // Precio si se excede el incluido
-  productId String
-  product   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
-  options   ModifierOption[]
+  id             String           @id @default(uuid())
+  name           String
+  minSelect      Int              @default(0)
+  maxSelect      Int              @default(1)
+  includedSelect Int              @default(0)
+  extraPrice     Decimal          @default(0.00) @db.Decimal(10, 2)
+  productId      String
+  product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  options        ModifierOption[]
 }
 
 model ModifierOption {
-  id        String        @id @default(uuid())
-  name      String        // Ej: "Granola", "Chocolate"
-  price     Decimal       @default(0.00) @db.Decimal(10, 2) // Si es 0 es gratis
-  groupId   String
-  
-  group     ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  id      String        @id @default(uuid())
+  name    String
+  price   Decimal       @default(0.00) @db.Decimal(10, 2)
+  groupId String
+  group   ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id        String      @id @default(uuid())
+  id           String      @id @default(uuid())
   customerName String
-  total     Decimal
-  status    OrderStatus @default(PENDING)      // PENDING, COMPLETED, CANCELLED
-  userId    String?     // Puede ser nulo si es kiosko anónimo, o el cajero que lo creó
-  branchId  String
-  user      User?       @relation(fields: [userId], references: [id])
-  branch    Branch      @relation(fields: [branchId], references: [id])
-  items     OrderItem[]
-  createdAt DateTime    @default(now())
-  updatedAt DateTime @updatedAt
+  total        Decimal
+  status       OrderStatus @default(PENDING)
+  userId       String?
+  branchId     String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  user         User?       @relation(fields: [userId], references: [id])
+  branch       Branch      @relation(fields: [branchId], references: [id])
+  items        OrderItem[]
 }
 
 model OrderItem {
@@ -166,40 +181,81 @@ model OrderItem {
   orderId   String
   productId String
   quantity  Int
-  price     Decimal @db.Decimal(10, 2) // Precio unitario final (Base + Extras)
+  price     Decimal @db.Decimal(10, 2)
+  options   Json?
   
-  options   Json?   
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
 }
 
 model InventoryStock {
-  id        String   @id @default(uuid())
-  quantity  Int      @default(0)
-  minStock  Int      @default(10) // Alerta de stock bajo
-  location  String?  // Ej. "Pasillo 4"
-  
+  id        String  @id @default(uuid())
+  quantity  Decimal @default(0) @db.Decimal(10, 3)
+  minStock  Decimal @default(10) @db.Decimal(10, 3)
+  location  String?
   productId String
   branchId  String
+  
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  branch    Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade)
 
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  branch    Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
-
-  @@unique([productId, branchId]) // Un producto solo aparece una vez por sucursal
+  @@unique([productId, branchId])
 }
 
 model InventoryMovement {
-  id          String       @id @default(uuid())
-  type        MovementType
-  quantity    Int          // Positivo o negativo según lógica, o valor absoluto
-  reason      String?      // Ej. "Pedido #123" o "Caducado Lote X"
-  createdAt   DateTime     @default(now())
+  id        String       @id @default(uuid())
+  type      MovementType
+  quantity  Decimal      @db.Decimal(10, 3)
+  reason    String?
+  createdAt DateTime     @default(now())
   
-  productId   String
-  branchId    String
-  userId      String       // Quién hizo el movimiento
+  // Relaciones opcionales (Puede ser mov. de Producto O de Insumo)
+  productId String?      // <--- CORRECCIÓN 3: Debe ser opcional, porque puede ser un Insumo
+  supplyId  String?
+  branchId  String
+  userId    String
 
-  product     Product      @relation(fields: [productId], references: [id])
-  branch      Branch       @relation(fields: [branchId], references: [id])
-  user        User         @relation(fields: [userId], references: [id])
+  product   Product?     @relation(fields: [productId], references: [id])
+  supply    Supply?      @relation(fields: [supplyId], references: [id]) // <--- Aquí daba error antes
+  branch    Branch       @relation(fields: [branchId], references: [id])
+  user      User         @relation(fields: [userId], references: [id])
+}
+
+// MODELO: Insumos / Materia Prima
+model Supply {
+  id                 String              @id @default(uuid())
+  name               String
+  unit               UnitType            @default(UNIT)
+  cost               Decimal             @default(0) @db.Decimal(10, 2)
+  
+  stocks             SupplyStock[]
+  recipeItems        RecipeItem[]
+  inventoryMovements InventoryMovement[] // <--- CORRECCIÓN 2: Faltaba esta relación inversa
+}
+
+// MODELO: Stock de Insumos (Por Sucursal)
+model SupplyStock {
+  id       String  @id @default(uuid())
+  quantity Decimal @default(0) @db.Decimal(10, 3)
+  minStock Decimal @default(5) @db.Decimal(10, 3)
+  
+  supplyId String
+  branchId String
+  
+  supply   Supply  @relation(fields: [supplyId], references: [id], onDelete: Cascade)
+  branch   Branch  @relation(fields: [branchId], references: [id], onDelete: Cascade) // <--- Aquí daba error antes
+
+  @@unique([supplyId, branchId])
+}
+
+// MODELO: Receta (Qué lleva cada producto)
+model RecipeItem {
+  id        String  @id @default(uuid())
+  quantity  Decimal @db.Decimal(10, 3)
+  
+  productId String
+  supplyId  String
+  
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  supply    Supply  @relation(fields: [supplyId], references: [id])
 }
