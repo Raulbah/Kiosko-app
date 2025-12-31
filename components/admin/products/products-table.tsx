@@ -12,6 +12,7 @@ import { getColumns, ProductColumn } from "./columns";
 import { deleteProductAction } from "@/lib/actions/product-actions";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import { ExportButtons } from "@/components/ui/export-buttons";
 
 interface ProductsTableProps {
     data: ProductColumn[];
@@ -58,105 +59,108 @@ export function ProductsTable({ data, categories, branches, permissions }: Produ
 
     return (
         <div className="space-y-4">
-        {/* Toolbar */}
-        <div className="flex items-center justify-between">
-            <Input
-            placeholder="Buscar productos..."
-            value={globalFilter ?? ""}
-            onChange={(event) => setGlobalFilter(event.target.value)}
-            className="max-w-sm"
-            />
-            {permissions.canCreate && (
-                <Button onClick={() => setIsCreateOpen(true)}>
-                    <Plus className="mr-2 h-4 w-4" /> Nuevo Producto
-                </Button>
-            )}
-        </div>
-
-        {/* Tabla */}
-        <div className="rounded-md border bg-white">
-            <Table>
-            <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                    ))}
-                </TableRow>
-                ))}
-            </TableHeader>
-            <TableBody>
-                {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
-                    ))}
-                    </TableRow>
-                ))
-                ) : (
-                <TableRow><TableCell colSpan={columns.length} className="h-24 text-center">No hay productos.</TableCell></TableRow>
-                )}
-            </TableBody>
-            </Table>
-        </div>
-
-        {/* Paginación */}
-        <div className="flex items-center justify-end space-x-2 py-4">
-            <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-            Anterior
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-            Siguiente
-            </Button>
-        </div>
-
-        {/* MODAL CREAR */}
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-            <DialogContent className="sm:max-w-175 max-h-[90vh] overflow-y-auto">
-                <DialogHeader><DialogTitle>Crear Producto</DialogTitle></DialogHeader>
-                <ProductForm 
-                    categories={categories} 
-                    branches={branches} 
-                    onSuccess={() => setIsCreateOpen(false)} 
+            {/* Toolbar */}
+            <div className="flex items-center justify-between">
+                <Input
+                    placeholder="Buscar productos..."
+                    value={globalFilter ?? ""}
+                    onChange={(event) => setGlobalFilter(event.target.value)}
+                    className="max-w-sm"
                 />
-            </DialogContent>
-        </Dialog>
+                <div className="flex items-center gap-2">
+                    <ExportButtons data={data} filename="productos_reporte" />
+                    {permissions.canCreate && (
+                        <Button className="cursor-pointer" onClick={() => setIsCreateOpen(true)}>
+                            <Plus className="mr-2 h-4 w-4" /> Nuevo Producto
+                        </Button>
+                    )}
+                </div>
+            </div>
 
-        {/* MODAL EDITAR */}
-        <Dialog open={!!editingProduct} onOpenChange={(val) => !val && setEditingProduct(null)}>
-            <DialogContent className="sm:max-w-175 max-h-[90vh] overflow-y-auto">
-                <DialogHeader><DialogTitle>Editar Producto</DialogTitle></DialogHeader>
-                {editingProduct && (
+            {/* Tabla */}
+            <div className="rounded-md border bg-white">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow><TableCell colSpan={columns.length} className="h-24 text-center">No hay productos.</TableCell></TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {/* Paginación */}
+            <div className="flex items-center justify-end space-x-2 py-4 cursor-pointer">
+                <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                    Anterior
+                </Button>
+                <Button className="cursor-pointer" variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                    Siguiente
+                </Button>
+            </div>
+
+            {/* MODAL CREAR */}
+            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                <DialogContent className="sm:max-w-175 max-h-[90vh] overflow-y-auto">
+                    <DialogHeader><DialogTitle>Crear Producto</DialogTitle></DialogHeader>
                     <ProductForm 
-                        product={editingProduct} 
                         categories={categories} 
                         branches={branches} 
-                        onSuccess={() => setEditingProduct(null)} 
+                        onSuccess={() => setIsCreateOpen(false)} 
                     />
-                )}
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
 
-        {/* MODAL ELIMINAR */}
-        <AlertDialog open={!!deletingProduct} onOpenChange={(val) => !val && setDeletingProduct(null)}>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>¿Desactivar Producto?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        El producto <b>{deletingProduct?.name}</b> dejará de estar visible en el kiosko.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction className="bg-red-600" onClick={handleDelete}>Desactivar</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+            {/* MODAL EDITAR */}
+            <Dialog open={!!editingProduct} onOpenChange={(val) => !val && setEditingProduct(null)}>
+                <DialogContent className="sm:max-w-175 max-h-[90vh] overflow-y-auto">
+                    <DialogHeader><DialogTitle>Editar Producto</DialogTitle></DialogHeader>
+                    {editingProduct && (
+                        <ProductForm 
+                            product={editingProduct} 
+                            categories={categories} 
+                            branches={branches} 
+                            onSuccess={() => setEditingProduct(null)} 
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
+
+            {/* MODAL ELIMINAR */}
+            <AlertDialog open={!!deletingProduct} onOpenChange={(val) => !val && setDeletingProduct(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>¿Desactivar Producto?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            El producto <b>{deletingProduct?.name}</b> dejará de estar visible en el kiosko.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
+                        <AlertDialogAction className="bg-red-600 hover:bg-red-700 cursor-pointer" onClick={handleDelete}>Desactivar</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

@@ -395,7 +395,9 @@ export const ModelName = {
   ModifierGroup: 'ModifierGroup',
   ModifierOption: 'ModifierOption',
   Order: 'Order',
-  OrderItem: 'OrderItem'
+  OrderItem: 'OrderItem',
+  InventoryStock: 'InventoryStock',
+  InventoryMovement: 'InventoryMovement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "branch" | "role" | "module" | "permission" | "user" | "category" | "product" | "productSize" | "modifierGroup" | "modifierOption" | "order" | "orderItem"
+    modelProps: "branch" | "role" | "module" | "permission" | "user" | "category" | "product" | "productSize" | "modifierGroup" | "modifierOption" | "order" | "orderItem" | "inventoryStock" | "inventoryMovement"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1303,6 +1305,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InventoryStock: {
+      payload: Prisma.$InventoryStockPayload<ExtArgs>
+      fields: Prisma.InventoryStockFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InventoryStockFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InventoryStockFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+        }
+        findFirst: {
+          args: Prisma.InventoryStockFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InventoryStockFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+        }
+        findMany: {
+          args: Prisma.InventoryStockFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>[]
+        }
+        create: {
+          args: Prisma.InventoryStockCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+        }
+        createMany: {
+          args: Prisma.InventoryStockCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InventoryStockCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>[]
+        }
+        delete: {
+          args: Prisma.InventoryStockDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+        }
+        update: {
+          args: Prisma.InventoryStockUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+        }
+        deleteMany: {
+          args: Prisma.InventoryStockDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InventoryStockUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InventoryStockUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>[]
+        }
+        upsert: {
+          args: Prisma.InventoryStockUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryStockPayload>
+        }
+        aggregate: {
+          args: Prisma.InventoryStockAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInventoryStock>
+        }
+        groupBy: {
+          args: Prisma.InventoryStockGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InventoryStockGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InventoryStockCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InventoryStockCountAggregateOutputType> | number
+        }
+      }
+    }
+    InventoryMovement: {
+      payload: Prisma.$InventoryMovementPayload<ExtArgs>
+      fields: Prisma.InventoryMovementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InventoryMovementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InventoryMovementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>
+        }
+        findFirst: {
+          args: Prisma.InventoryMovementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InventoryMovementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>
+        }
+        findMany: {
+          args: Prisma.InventoryMovementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>[]
+        }
+        create: {
+          args: Prisma.InventoryMovementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>
+        }
+        createMany: {
+          args: Prisma.InventoryMovementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InventoryMovementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>[]
+        }
+        delete: {
+          args: Prisma.InventoryMovementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>
+        }
+        update: {
+          args: Prisma.InventoryMovementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>
+        }
+        deleteMany: {
+          args: Prisma.InventoryMovementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InventoryMovementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InventoryMovementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>[]
+        }
+        upsert: {
+          args: Prisma.InventoryMovementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InventoryMovementPayload>
+        }
+        aggregate: {
+          args: Prisma.InventoryMovementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInventoryMovement>
+        }
+        groupBy: {
+          args: Prisma.InventoryMovementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InventoryMovementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InventoryMovementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InventoryMovementCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1417,7 +1567,6 @@ export const ProductScalarFieldEnum = {
   imageUrl: 'imageUrl',
   categoryId: 'categoryId',
   branchId: 'branchId',
-  stock: 'stock',
   isActive: 'isActive',
   createdAt: 'createdAt'
 } as const
@@ -1482,6 +1631,32 @@ export const OrderItemScalarFieldEnum = {
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
+
+
+export const InventoryStockScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  minStock: 'minStock',
+  location: 'location',
+  productId: 'productId',
+  branchId: 'branchId'
+} as const
+
+export type InventoryStockScalarFieldEnum = (typeof InventoryStockScalarFieldEnum)[keyof typeof InventoryStockScalarFieldEnum]
+
+
+export const InventoryMovementScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  quantity: 'quantity',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  productId: 'productId',
+  branchId: 'branchId',
+  userId: 'userId'
+} as const
+
+export type InventoryMovementScalarFieldEnum = (typeof InventoryMovementScalarFieldEnum)[keyof typeof InventoryMovementScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1623,6 +1798,20 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
+ * Reference to a field of type 'MovementType'
+ */
+export type EnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType'>
+    
+
+
+/**
+ * Reference to a field of type 'MovementType[]'
+ */
+export type ListEnumMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MovementType[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1742,6 +1931,8 @@ export type GlobalOmitConfig = {
   modifierOption?: Prisma.ModifierOptionOmit
   order?: Prisma.OrderOmit
   orderItem?: Prisma.OrderItemOmit
+  inventoryStock?: Prisma.InventoryStockOmit
+  inventoryMovement?: Prisma.InventoryMovementOmit
 }
 
 /* Types for Logging */

@@ -57,7 +57,7 @@ export default function ProductCard(product: ProductCardProps) {
                 
                 {/* Badge de Cantidad (Solo visual para Complejos, Funcional para Simples) */}
                 {totalQuantity > 0 && hasModifiers && (
-                    <Badge className="absolute top-2 right-2 z-10 bg-primary text-white">
+                    <Badge className="absolute top-2 right-2 z-10 bg-blue-500 text-white">
                         {totalQuantity} en carrito
                     </Badge>
                 )}

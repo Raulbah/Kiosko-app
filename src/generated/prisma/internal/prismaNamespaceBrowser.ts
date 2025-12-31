@@ -62,7 +62,9 @@ export const ModelName = {
   ModifierGroup: 'ModifierGroup',
   ModifierOption: 'ModifierOption',
   Order: 'Order',
-  OrderItem: 'OrderItem'
+  OrderItem: 'OrderItem',
+  InventoryStock: 'InventoryStock',
+  InventoryMovement: 'InventoryMovement'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -156,7 +158,6 @@ export const ProductScalarFieldEnum = {
   imageUrl: 'imageUrl',
   categoryId: 'categoryId',
   branchId: 'branchId',
-  stock: 'stock',
   isActive: 'isActive',
   createdAt: 'createdAt'
 } as const
@@ -221,6 +222,32 @@ export const OrderItemScalarFieldEnum = {
 } as const
 
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
+
+
+export const InventoryStockScalarFieldEnum = {
+  id: 'id',
+  quantity: 'quantity',
+  minStock: 'minStock',
+  location: 'location',
+  productId: 'productId',
+  branchId: 'branchId'
+} as const
+
+export type InventoryStockScalarFieldEnum = (typeof InventoryStockScalarFieldEnum)[keyof typeof InventoryStockScalarFieldEnum]
+
+
+export const InventoryMovementScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  quantity: 'quantity',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  productId: 'productId',
+  branchId: 'branchId',
+  userId: 'userId'
+} as const
+
+export type InventoryMovementScalarFieldEnum = (typeof InventoryMovementScalarFieldEnum)[keyof typeof InventoryMovementScalarFieldEnum]
 
 
 export const SortOrder = {

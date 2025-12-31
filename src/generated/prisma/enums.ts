@@ -18,3 +18,13 @@ export const OrderStatus = {
 } as const
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const MovementType = {
+  IN_PURCHASE: 'IN_PURCHASE',
+  OUT_SALE: 'OUT_SALE',
+  OUT_LOSS: 'OUT_LOSS',
+  ADJUSTMENT: 'ADJUSTMENT'
+} as const
+
+export type MovementType = (typeof MovementType)[keyof typeof MovementType]

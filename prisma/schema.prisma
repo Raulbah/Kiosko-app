@@ -21,6 +21,13 @@ enum OrderStatus {
   CANCELLED    // Cancelada
 }
 
+enum MovementType {
+  IN_PURCHASE    // Entrada por compra
+  OUT_SALE       // Salida por venta
+  OUT_LOSS       // Merma / Caducidad / Robo
+  ADJUSTMENT     // Ajuste de inventario físico
+}
+
 // --- CORE SYSTEM & RBAC ---
 
 model Branch {
@@ -32,6 +39,8 @@ model Branch {
   users     User[]
   products  Product[]
   orders    Order[]
+  inventoryStocks    InventoryStock[]
+  inventoryMovements InventoryMovement[]
   createdAt DateTime @default(now())
 }
 
@@ -72,10 +81,10 @@ model User {
   roleId       String
   branchId     String
   isActive     Boolean  @default(true)
-  
   role         Role     @relation(fields: [roleId], references: [id])
   branch       Branch   @relation(fields: [branchId], references: [id])
   orders       Order[]
+  inventoryMovements InventoryMovement[]
   createdAt    DateTime @default(now())
 }
 
@@ -97,13 +106,14 @@ model Product {
   imageUrl    String?
   categoryId  String
   branchId    String?   // Filtrado por sucursal
-  stock       Int      @default(0)
   isActive    Boolean  @default(true)
   // Relaciones
   modifierGroups ModifierGroup[]
   sizes          ProductSize[]
   category    Category @relation(fields: [categoryId], references: [id])
   branch      Branch?   @relation(fields: [branchId], references: [id])
+  inventoryStocks InventoryStock[]
+  inventoryMovements InventoryMovement[]
   orderItems  OrderItem[]
   createdAt   DateTime @default(now())
 }
@@ -158,10 +168,38 @@ model OrderItem {
   quantity  Int
   price     Decimal @db.Decimal(10, 2) // Precio unitario final (Base + Extras)
   
-  // NUEVO CAMPO: Aquí guardaremos el snapshot de los modificadores y tamaño
-  // Estructura esperada: { size: "Grande", modifiers: [{name: "Granola", price: 0}] }
   options   Json?   
-
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
+}
+
+model InventoryStock {
+  id        String   @id @default(uuid())
+  quantity  Int      @default(0)
+  minStock  Int      @default(10) // Alerta de stock bajo
+  location  String?  // Ej. "Pasillo 4"
+  
+  productId String
+  branchId  String
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  branch    Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, branchId]) // Un producto solo aparece una vez por sucursal
+}
+
+model InventoryMovement {
+  id          String       @id @default(uuid())
+  type        MovementType
+  quantity    Int          // Positivo o negativo según lógica, o valor absoluto
+  reason      String?      // Ej. "Pedido #123" o "Caducado Lote X"
+  createdAt   DateTime     @default(now())
+  
+  productId   String
+  branchId    String
+  userId      String       // Quién hizo el movimiento
+
+  product     Product      @relation(fields: [productId], references: [id])
+  branch      Branch       @relation(fields: [branchId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
 }

@@ -18,6 +18,7 @@ import { getColumns, UserColumn } from "./columns";
 import { deleteUserAction } from "@/lib/actions/user-actions";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import { ExportButtons } from "@/components/ui/export-buttons";
 
 interface UsersTableProps {
     data: UserColumn[];
@@ -72,11 +73,17 @@ export function UsersTable({ data, roles, branches, permissions }: UsersTablePro
                     onChange={(event) => setGlobalFilter(event.target.value)}
                     className="max-w-sm"
                 />
-                {permissions.canCreate && (
-                    <Button className="cursor-pointer" onClick={() => setIsCreateOpen(true)}>
-                        <Plus className="mr-2 h-4 w-4" /> Nuevo Usuario
-                    </Button>
-                )}
+
+                <div className="flex items-center gap-2">
+                    {/* 2. AGREGAR COMPONENTE DE EXPORTACIÓN */}
+                    <ExportButtons data={data} filename="listado_usuarios" />
+
+                    {permissions.canCreate && (
+                        <Button className="cursor-pointer" onClick={() => setIsCreateOpen(true)}>
+                            <Plus className="mr-2 h-4 w-4" /> Nuevo Usuario
+                        </Button>
+                    )}
+                </div>
             </div>
 
             {/* Tabla */}

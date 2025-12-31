@@ -70,11 +70,14 @@ export const getColumns = ({ onEdit, onDelete, permissions }: ColumnsProps): Col
     {
         accessorKey: "isActive",
         header: "Estado",
-        cell: ({ row }) => (
-            <Badge variant={row.original.isActive ? "default" : "destructive"} className="text-[10px]">
-                {row.original.isActive ? "Activo" : "Inactivo"}
-            </Badge>
-        )
+        cell: ({ row }) => {
+            const isActive = row.original.isActive;
+            return (
+                <Badge variant={isActive ? "default" : "destructive"} className={`${isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"} text-[10px]`}>
+                    {isActive ? "Activo" : "Inactivo"}
+                </Badge>
+            )
+        }
     },
     {
         id: "actions",
@@ -83,32 +86,32 @@ export const getColumns = ({ onEdit, onDelete, permissions }: ColumnsProps): Col
             {/* Botón directo a Modificadores */}
             {permissions.canUpdate && (
                 <Link href={`/admin/products/${row.original.id}/modifiers`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-primary">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-primary cursor-pointer">
                         <Settings2 className="h-4 w-4" />
                     </Button>
                 </Link>
             )}
 
             <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Menú</span>
-                <MoreHorizontal className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                {permissions.canUpdate && (
-                    <DropdownMenuItem onClick={() => onEdit(row.original.originalProduct)}>
-                        <Edit className="mr-2 h-4 w-4" /> Editar
-                    </DropdownMenuItem>
-                )}
-                {permissions.canDelete && (
-                    <DropdownMenuItem onClick={() => onDelete(row.original.originalProduct)} className="text-red-600">
-                        <Trash className="mr-2 h-4 w-4" /> Desactivar
-                    </DropdownMenuItem>
-                )}
-            </DropdownMenuContent>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
+                        <span className="sr-only">Menú</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                    {permissions.canUpdate && (
+                        <DropdownMenuItem className="cursor-pointer" onClick={() => onEdit(row.original.originalProduct)}>
+                            <Edit className="mr-2 h-4 w-4" /> Editar
+                        </DropdownMenuItem>
+                    )}
+                    {permissions.canDelete && (
+                        <DropdownMenuItem onClick={() => onDelete(row.original.originalProduct)} variant="destructive" className="cursor-pointer">
+                            <Trash className="mr-2 h-4 w-4" /> Desactivar
+                        </DropdownMenuItem>
+                    )}
+                </DropdownMenuContent>
             </DropdownMenu>
         </div>
         ),

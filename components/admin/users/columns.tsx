@@ -69,11 +69,15 @@ export const getColumns = ({ onEdit, onDelete, permissions }: ColumnsProps): Col
     {
         accessorKey: "isActive",
         header: "Estado",
-        cell: ({ row }) => (
-            <Badge variant={row.original.isActive ? "default" : "destructive"} className={row.original.isActive ? "bg-blue-500 text-white dark:bg-blue-600" : ""}>
-                {row.original.isActive ? "Activo" : "Inactivo"}
-            </Badge>
-        )
+        cell: ({ row }) => {
+            const isActive = row.original.isActive;
+            return(
+                <Badge variant={isActive ? "default" : "destructive"} className={isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}>
+                    {isActive ? "Activo" : "Inactivo"}
+                </Badge>
+            )
+        }
+        
     },
     {
         id: "actions",

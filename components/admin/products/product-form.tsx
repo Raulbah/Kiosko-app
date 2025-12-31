@@ -89,12 +89,11 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                
                 {/* TABS CONTAINER */}
                 <Tabs defaultValue="info" className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="info">Información General</TabsTrigger>
-                        <TabsTrigger value="sizes">Tamaños y Precios</TabsTrigger>
+                        <TabsTrigger className="cursor-pointer" value="info">Información General</TabsTrigger>
+                        <TabsTrigger className="cursor-pointer" value="sizes">Tamaños y Precios</TabsTrigger>
                     </TabsList>
                     
                     {/* TAB 1: INFO (Sin el input de imagen) */}
@@ -110,7 +109,6 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                                 </FormItem>
                             )}
                         />
-                        
                         {/* ... (Precios, Categoría, Sucursal, Descripción siguen igual) ... */}
                         <div className="grid grid-cols-2 gap-4">
                             <FormField
@@ -118,19 +116,19 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                                 name="price"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Precio Base</FormLabel>
-                                    <FormControl>
-                                        <Input 
-                                            type="number" 
-                                            step="0.50" 
-                                            {...field} 
-                                            onChange={(e) => {
-                                                const val = e.target.value === "" ? 0 : parseFloat(e.target.value);
-                                                field.onChange(val);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
+                                        <FormLabel>Precio Base</FormLabel>
+                                        <FormControl>
+                                            <Input 
+                                                type="number" 
+                                                step="0.50" 
+                                                {...field} 
+                                                onChange={(e) => {
+                                                    const val = e.target.value === "" ? 0 : parseFloat(e.target.value);
+                                                    field.onChange(val);
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -139,14 +137,14 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                                 name="categoryId"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Categoría</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
-                                        <SelectContent>
-                                            {categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
+                                        <FormLabel>Categoría</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl className="cursor-pointer"><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
+                                            <SelectContent>
+                                                {categories.map(c => <SelectItem className="cursor-pointer" key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -160,10 +158,10 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                                     <FormItem>
                                     <FormLabel>Disponibilidad</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value || "global"}>
-                                        <FormControl><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
+                                        <FormControl className="cursor-pointer"><SelectTrigger><SelectValue placeholder="Selecciona" /></SelectTrigger></FormControl>
                                         <SelectContent>
-                                            <SelectItem value="global">Todas las Sucursales (Global)</SelectItem>
-                                            {branches.map(b => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}
+                                            <SelectItem className="cursor-pointer" value="global">Todas las Sucursales (Global)</SelectItem>
+                                            {branches.map(b => <SelectItem className="cursor-pointer" key={b.id} value={b.id}>{b.name}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -176,7 +174,7 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col justify-end pb-2">
                                         <div className="flex items-center gap-2">
-                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                            <Switch className="cursor-pointer" checked={field.value} onCheckedChange={field.onChange} />
                                             <FormLabel className="pb-0">Producto Activo</FormLabel>
                                         </div>
                                     </FormItem>
@@ -202,7 +200,7 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                         {/* ... lógica de sizes ... */}
                         <div className="flex items-center justify-between">
                             <h3 className="text-sm font-medium">Configuración de Tamaños</h3>
-                            <Button type="button" variant="outline" size="sm" onClick={() => append({ name: "", price: 0 })}>
+                            <Button className="cursor-pointer" type="button" variant="outline" size="sm" onClick={() => append({ name: "", price: 0 })}>
                                 <Plus className="mr-2 h-3 w-3" /> Agregar Tamaño
                             </Button>
                         </div>
@@ -248,7 +246,7 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                                             </FormItem>
                                         )}
                                     />
-                                    <Button type="button" variant="ghost" size="icon" className="mb-0.5 text-red-500" onClick={() => remove(index)}>
+                                    <Button type="button" variant="destructive" size="icon" className="mb-0.5 cursor-pointer" onClick={() => remove(index)}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </div>
@@ -261,7 +259,7 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                 <div className="border-t pt-4">
                     <FormItem>
                         <FormLabel>Imagen del Producto</FormLabel>
-                        <FormControl>
+                        <FormControl className="cursor-pointer">
                             <Input type="file" accept="image/*" />
                         </FormControl>
                         <p className="text-[0.8rem] text-muted-foreground">
@@ -270,7 +268,7 @@ export function ProductForm({ product, categories, branches, onSuccess }: Produc
                     </FormItem>
                 </div>
 
-                <Button type="submit" className="w-full mt-4" disabled={loading}>
+                <Button type="submit" className="w-full mt-4 cursor-pointer" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {product ? "Guardar Cambios" : "Crear Producto"}
                 </Button>

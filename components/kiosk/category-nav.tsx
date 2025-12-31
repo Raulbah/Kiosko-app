@@ -45,7 +45,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
                     <Button
                         variant={currentCategory === "all" ? "default" : "outline"}
                         className={cn(
-                            "rounded-full h-12 px-6 gap-2 transition-all border-2", // Más alto (h-12)
+                            "rounded-full h-12 px-6 gap-2 transition-all border-2 cursor-pointer",
                             currentCategory === "all" 
                                 ? "shadow-md scale-105 border-primary" 
                                 : "hover:bg-slate-50 border-transparent bg-slate-100 text-slate-600"
@@ -67,7 +67,7 @@ export function CategoryNav({ categories }: CategoryNavProps) {
                                 key={cat.id}
                                 variant={isSelected ? "default" : "outline"}
                                 className={cn(
-                                    "rounded-full h-12 pl-2 pr-6 gap-3 transition-all border-2",
+                                    "rounded-full h-12 pl-2 pr-6 gap-3 transition-all border-2 cursor-pointer",
                                     isSelected 
                                     ? "shadow-md scale-105 border-primary" 
                                     : "hover:bg-slate-50 border-transparent bg-slate-100 text-slate-600"

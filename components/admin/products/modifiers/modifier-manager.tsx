@@ -124,7 +124,7 @@ export function ModifierManager({ productId, initialGroups }: ModifierManagerPro
                                         <div className="w-24">
                                             <Input name="price" type="number" step="0.5" placeholder="$0.00" className="h-8 text-sm" defaultValue={0} />
                                         </div>
-                                        <Button type="submit" size="sm" className="h-8"><Plus className="h-3 w-3 mr-1"/> Agregar</Button>
+                                        <Button type="submit" size="sm" className="h-8 cursor-pointer"><Plus className="h-3 w-3 mr-1"/> Agregar</Button>
                                     </form>
                                 </div>
                             </AccordionContent>

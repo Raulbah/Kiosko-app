@@ -217,6 +217,7 @@ export type UserWhereInput = {
   role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   orders?: Prisma.OrderListRelationFilter
+  inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -232,6 +233,7 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.RoleOrderByWithRelationInput
   branch?: Prisma.BranchOrderByWithRelationInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
+  inventoryMovements?: Prisma.InventoryMovementOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -250,6 +252,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>
   branch?: Prisma.XOR<Prisma.BranchScalarRelationFilter, Prisma.BranchWhereInput>
   orders?: Prisma.OrderListRelationFilter
+  inventoryMovements?: Prisma.InventoryMovementListRelationFilter
 }, "id" | "employeeId">
 
 export type UserOrderByWithAggregationInput = {
@@ -293,6 +296,7 @@ export type UserCreateInput = {
   role: Prisma.RoleCreateNestedOneWithoutUsersInput
   branch: Prisma.BranchCreateNestedOneWithoutUsersInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -306,6 +310,7 @@ export type UserUncheckedCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -319,6 +324,7 @@ export type UserUpdateInput = {
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutUsersNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -332,6 +338,7 @@ export type UserUncheckedUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -417,6 +424,11 @@ export type UserMinOrderByAggregateInput = {
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type UserCreateNestedManyWithoutBranchInput = {
@@ -519,6 +531,20 @@ export type UserUpdateOneWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
 }
 
+export type UserCreateNestedOneWithoutInventoryMovementsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInventoryMovementsInput, Prisma.UserUncheckedCreateWithoutInventoryMovementsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInventoryMovementsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutInventoryMovementsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInventoryMovementsInput, Prisma.UserUncheckedCreateWithoutInventoryMovementsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInventoryMovementsInput
+  upsert?: Prisma.UserUpsertWithoutInventoryMovementsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInventoryMovementsInput, Prisma.UserUpdateWithoutInventoryMovementsInput>, Prisma.UserUncheckedUpdateWithoutInventoryMovementsInput>
+}
+
 export type UserCreateWithoutBranchInput = {
   id?: string
   employeeId: string
@@ -529,6 +555,7 @@ export type UserCreateWithoutBranchInput = {
   createdAt?: Date | string
   role: Prisma.RoleCreateNestedOneWithoutUsersInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBranchInput = {
@@ -541,6 +568,7 @@ export type UserUncheckedCreateWithoutBranchInput = {
   isActive?: boolean
   createdAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBranchInput = {
@@ -594,6 +622,7 @@ export type UserCreateWithoutRoleInput = {
   createdAt?: Date | string
   branch: Prisma.BranchCreateNestedOneWithoutUsersInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRoleInput = {
@@ -606,6 +635,7 @@ export type UserUncheckedCreateWithoutRoleInput = {
   isActive?: boolean
   createdAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRoleInput = {
@@ -644,6 +674,7 @@ export type UserCreateWithoutOrdersInput = {
   createdAt?: Date | string
   role: Prisma.RoleCreateNestedOneWithoutUsersInput
   branch: Prisma.BranchCreateNestedOneWithoutUsersInput
+  inventoryMovements?: Prisma.InventoryMovementCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -656,6 +687,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   branchId: string
   isActive?: boolean
   createdAt?: Date | string
+  inventoryMovements?: Prisma.InventoryMovementUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -684,6 +716,7 @@ export type UserUpdateWithoutOrdersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
   branch?: Prisma.BranchUpdateOneRequiredWithoutUsersNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -696,6 +729,75 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   branchId?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutInventoryMovementsInput = {
+  id?: string
+  employeeId: string
+  password: string
+  name: string
+  image?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  role: Prisma.RoleCreateNestedOneWithoutUsersInput
+  branch: Prisma.BranchCreateNestedOneWithoutUsersInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutInventoryMovementsInput = {
+  id?: string
+  employeeId: string
+  password: string
+  name: string
+  image?: string | null
+  roleId: string
+  branchId: string
+  isActive?: boolean
+  createdAt?: Date | string
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutInventoryMovementsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInventoryMovementsInput, Prisma.UserUncheckedCreateWithoutInventoryMovementsInput>
+}
+
+export type UserUpsertWithoutInventoryMovementsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInventoryMovementsInput, Prisma.UserUncheckedUpdateWithoutInventoryMovementsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInventoryMovementsInput, Prisma.UserUncheckedCreateWithoutInventoryMovementsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInventoryMovementsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInventoryMovementsInput, Prisma.UserUncheckedUpdateWithoutInventoryMovementsInput>
+}
+
+export type UserUpdateWithoutInventoryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
+  branch?: Prisma.BranchUpdateOneRequiredWithoutUsersNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInventoryMovementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  employeeId?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roleId?: Prisma.StringFieldUpdateOperationsInput | string
+  branchId?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyBranchInput = {
@@ -719,6 +821,7 @@ export type UserUpdateWithoutBranchInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBranchInput = {
@@ -731,6 +834,7 @@ export type UserUncheckedUpdateWithoutBranchInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutBranchInput = {
@@ -765,6 +869,7 @@ export type UserUpdateWithoutRoleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   branch?: Prisma.BranchUpdateOneRequiredWithoutUsersNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRoleInput = {
@@ -777,6 +882,7 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  inventoryMovements?: Prisma.InventoryMovementUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutRoleInput = {
@@ -797,10 +903,12 @@ export type UserUncheckedUpdateManyWithoutRoleInput = {
 
 export type UserCountOutputType = {
   orders: number
+  inventoryMovements: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
+  inventoryMovements?: boolean | UserCountOutputTypeCountInventoryMovementsArgs
 }
 
 /**
@@ -820,6 +928,13 @@ export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInventoryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InventoryMovementWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -834,6 +949,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -882,6 +998,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   branch?: boolean | Prisma.BranchDefaultArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
+  inventoryMovements?: boolean | Prisma.User$inventoryMovementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -899,6 +1016,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: Prisma.$RolePayload<ExtArgs>
     branch: Prisma.$BranchPayload<ExtArgs>
     orders: Prisma.$OrderPayload<ExtArgs>[]
+    inventoryMovements: Prisma.$InventoryMovementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1307,6 +1425,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   role<T extends Prisma.RoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoleDefaultArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   branch<T extends Prisma.BranchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BranchDefaultArgs<ExtArgs>>): Prisma.Prisma__BranchClient<runtime.Types.Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  inventoryMovements<T extends Prisma.User$inventoryMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$inventoryMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InventoryMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1762,6 +1881,30 @@ export type User$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.inventoryMovements
+ */
+export type User$inventoryMovementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InventoryMovement
+   */
+  select?: Prisma.InventoryMovementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InventoryMovement
+   */
+  omit?: Prisma.InventoryMovementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InventoryMovementInclude<ExtArgs> | null
+  where?: Prisma.InventoryMovementWhereInput
+  orderBy?: Prisma.InventoryMovementOrderByWithRelationInput | Prisma.InventoryMovementOrderByWithRelationInput[]
+  cursor?: Prisma.InventoryMovementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InventoryMovementScalarFieldEnum | Prisma.InventoryMovementScalarFieldEnum[]
 }
 
 /**
